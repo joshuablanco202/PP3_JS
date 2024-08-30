@@ -1,21 +1,25 @@
-fetch("https://fakestoreapi.com/products")
-  .then((data) => {
-    console.log(data);
-    return data.json();
-  })
-  .then((objectData) => {
-    console.log(objectData[0].title);
-    let tableData = "";
-    objectData.map((values) => {
-      tableData += `<tr>
-            <td>${values.title}</td>
-            <td>${values.description}</td>
-            <td>${values.price}</td>
-            <td> <img src="${values.image}"</td>
-          </tr>`;
-    });
-    document.getElementById("table_body").innerHTML = tableData;
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+fetchData();
+
+async function fetchData() {
+  try {
+    const pokemonName = document
+      .getElementById("pokemonName")
+      .value.toLowerCase();
+    const response = await fetch(
+      `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
+    );
+
+    if (!response.ok) {
+      throw new Error("Pokemon not Found");
+    }
+
+    const data = await response.json();
+    const pokemonSprite = data.sprites.front_default;
+    const imgElement = document.getElementById("pokemonSprite");
+
+    imgElement.src = pokemonSprite;
+    imgElement.style.display = "block";
+  } catch (error) {
+    console.error(error);
+  }
+}
